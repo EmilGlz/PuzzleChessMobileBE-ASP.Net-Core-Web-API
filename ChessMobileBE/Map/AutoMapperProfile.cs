@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ChessMobileBE.Models.DBModels;
-using ChessMobileBE.Models.DTOs;
+using ChessMobileBE.Models.DTOs.Requests;
 
 namespace ChessMobileBE.Map
 {

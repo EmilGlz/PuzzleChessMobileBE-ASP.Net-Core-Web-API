@@ -1,5 +1,7 @@
 using AutoMapper;
+using ChessMobileBE.Contracts;
 using ChessMobileBE.Map;
+using ChessMobileBE.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +23,8 @@ var config = new MapperConfiguration(cfr =>
 });
 var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
-
-
+builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<IPendingMatchService, PendingMatchService>();
 
 var app = builder.Build();
 

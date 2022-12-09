@@ -1,4 +1,5 @@
 ﻿using ChessMobileBE.Contracts;
+using ChessMobileBE.Models.DTOs.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,8 @@ namespace ChessMobileBE.Controllers
             _pendingMatchService = pendingMatchService;
         }
 
+        [HttpGet]
+        [Route("FindRoom")]
         public IActionResult FindRoom(string userId)
         {
             var emptyMatch = _pendingMatchService.GetEmptyMatch();
@@ -26,11 +29,21 @@ namespace ChessMobileBE.Controllers
                 {
                     return BadRequest("Cannot add new match as you are already waiting for opponent to join");
                 }
-                return Ok(newMatch);
+                return Ok(new FindMatchResoonse
+                {
+                    IsPending = true,
+                    MatchModel = null,
+                    PendingMatchModel = newMatch
+                });
             }
             _pendingMatchService.DeleteMatch(emptyMatch.Id);
             var match = _matchService.Add(emptyMatch.UserId, userId, emptyMatch.PuzzleIndex);
-            return Ok(match);
+            return Ok(new FindMatchResoonse
+            {
+                IsPending = false,
+                MatchModel = match,
+                PendingMatchModel = null
+            });
         }
     }
 }

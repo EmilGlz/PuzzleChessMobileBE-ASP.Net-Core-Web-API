@@ -1,4 +1,4 @@
-﻿namespace ChessMobileBE.Models.DTOs
+﻿namespace ChessMobileBE.Models.DTOs.Requests
 {
     public class PendingMatchDTO
     {
