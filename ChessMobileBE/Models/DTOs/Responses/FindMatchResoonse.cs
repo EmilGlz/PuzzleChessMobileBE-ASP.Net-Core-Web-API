@@ -2,7 +2,7 @@
 
 namespace ChessMobileBE.Models.DTOs.Responses
 {
-    public class FindMatchResoonse
+    public class FindMatchResponse
     {
         public bool IsPending { get; set; }
         public Match MatchModel { get; set; }

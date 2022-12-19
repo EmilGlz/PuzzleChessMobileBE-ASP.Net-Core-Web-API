@@ -54,5 +54,16 @@ namespace ChessMobileBE.Controllers
             _pendingMatchService.DeleteMatch(matchId);
             return Ok();
         }
+
+        [HttpPut]
+        [Route("AddMove")]
+        public IActionResult AddMove(AddMoveDTO model)
+        {
+            var room = _matchService.Get(model.RoomId);
+            if (room == null)
+                return NotFound("Room not found");
+            var roomUpdated = _matchService.AddMove(model.UserId, model.RoomId, model.CorrectMove);
+            return Ok(roomUpdated);
+        }
     }
 }
