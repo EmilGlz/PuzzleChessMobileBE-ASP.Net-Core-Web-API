@@ -31,7 +31,7 @@ namespace ChessMobileBE.Services
             return dbModel;
         }
 
-        public void DeleteMatch(string id)
+        public void Delete(string id)
         {
             _collection.DeleteOne(u => u.Id == id);
         }

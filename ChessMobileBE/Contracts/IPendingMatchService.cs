@@ -6,6 +6,6 @@ namespace ChessMobileBE.Contracts
     {
         PendingMatch GetEmptyMatch();
         PendingMatch AddNewEmptyMatch(string userId);
-        void DeleteMatch(string id);
+        void Delete(string id);
     }
 }

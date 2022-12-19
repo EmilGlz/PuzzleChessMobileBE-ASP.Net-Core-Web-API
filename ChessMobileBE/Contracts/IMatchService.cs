@@ -6,6 +6,7 @@ namespace ChessMobileBE.Contracts
     {
         Match Add(string hostId, string clientId, int puzzleIndex);
         Match AddMove(string userId, string roomId, bool correctMove);
+        void Delete(string Id);
         Match Get(string Id);
     }
 }

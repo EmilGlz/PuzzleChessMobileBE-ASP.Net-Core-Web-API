@@ -13,6 +13,7 @@ namespace ChessMobileBE.Services
             var database = client.GetDatabase("Matches");
             _collection = database.GetCollection<Match>("MatchesCollection");
         }
+
         public Match Add(string hostId, string clientId, int puzzleIndex)
         {
             var dbModel = new Match
@@ -57,5 +58,11 @@ namespace ChessMobileBE.Services
             }
             return gettingRoom[0];
         }
+
+        public void Delete(string Id)
+        {
+            _collection.DeleteOne(m => m.Id == Id);
+        }
+
     }
 }

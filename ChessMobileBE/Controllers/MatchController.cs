@@ -17,7 +17,6 @@ namespace ChessMobileBE.Controllers
             _matchService = matchService;
             _pendingMatchService = pendingMatchService;
         }
-
         [HttpGet]
         [Route("FindRoom")]
         public IActionResult FindRoom(string userId)
@@ -37,7 +36,7 @@ namespace ChessMobileBE.Controllers
                     PendingMatchModel = newMatch
                 });
             }
-            _pendingMatchService.DeleteMatch(emptyMatch.Id);
+            _pendingMatchService.Delete(emptyMatch.Id);
             var match = _matchService.Add(emptyMatch.UserId, userId, emptyMatch.PuzzleIndex);
             return Ok(new FindMatchResponse
             {
@@ -51,7 +50,7 @@ namespace ChessMobileBE.Controllers
         [Route("CancelPendingMatch")]
         public IActionResult CancelPendingMatch(string matchId)
         {
-            _pendingMatchService.DeleteMatch(matchId);
+            _pendingMatchService.Delete(matchId);
             return Ok();
         }
 
