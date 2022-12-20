@@ -2,7 +2,10 @@ using AutoMapper;
 using ChessMobileBE.Contracts;
 using ChessMobileBE.Map;
 using ChessMobileBE.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,53 @@ var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IPendingMatchService, PendingMatchService>();
+builder.Services.AddScoped<IUserService, UserService>();
+ConfigurationManager configuration = builder.Configuration;
+var tokenValidationParameters = new TokenValidationParameters
+{
+    ClockSkew = TimeSpan.Zero,
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    //ValidateLifetime = true,
+    //ValidateIssuerSigningKey = true,
+    ValidIssuer = configuration.GetValue<string>("Jwt:Issuer"),
+    ValidAudience = configuration.GetValue<string>("Jwt:Audience"),
+    IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                configuration.GetValue<string>("Jwt:SecretKey")))
+};
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = tokenValidationParameters;
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var test = accessToken.ToString();
+            // if the request id for our hub
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken)
+            && path.StartsWithSegments("/gameHub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+});
+
 
 var app = builder.Build();
 

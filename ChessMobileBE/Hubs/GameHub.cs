@@ -1,8 +1,11 @@
 ﻿using ChessMobileBE.Models.DTOs.SignalRModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ChessMobileBE.Hubs
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GameHub: Hub
     {
         public Task SendJoinedRoomToUser(string hostId, string clientId)

@@ -1,7 +1,6 @@
 ﻿using ChessMobileBE.Contracts;
 using ChessMobileBE.Models.DTOs.Requests;
 using ChessMobileBE.Models.DTOs.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChessMobileBE.Controllers
