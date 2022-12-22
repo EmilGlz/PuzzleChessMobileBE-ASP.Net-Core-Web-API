@@ -16,16 +16,23 @@ namespace ChessMobileBE.Services
             _collection = database.GetCollection<User>("UsersCollection");
         }
         
-        public User Get(string playGamesId)
+        public AuthResult Get(string playGamesId)
         {
             var gettingUser = _collection.Find(u => u.PlayGamesId == playGamesId).ToList();
             if (gettingUser.Count > 0)
-                return gettingUser[0];
+            {
+                var token = Helpers.Helpers.Generate(gettingUser[0]);
+                return new AuthResult
+                {
+                    User = gettingUser[0],
+                    AccessToken = token
+                };
+            }
             else
                 return null;
         }
 
-        public User Add(UserDTO dto)
+        public AuthResult Add(UserDTO dto)
         {
             var newUser = new User
             {
@@ -36,7 +43,12 @@ namespace ChessMobileBE.Services
                 RegisterDate = DateTime.UtcNow
             };
             _collection.InsertOne(newUser);
-            return newUser;
+            var token = Helpers.Helpers.Generate(newUser);
+            return new AuthResult
+            {
+                User = newUser,
+                AccessToken = token
+            };
         }
 
     }

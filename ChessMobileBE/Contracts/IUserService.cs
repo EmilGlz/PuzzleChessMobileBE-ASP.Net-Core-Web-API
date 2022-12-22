@@ -1,11 +1,12 @@
 ﻿using ChessMobileBE.Models.DBModels;
 using ChessMobileBE.Models.DTOs.Requests;
+using ChessMobileBE.Models.DTOs.Responses;
 
 namespace ChessMobileBE.Contracts
 {
     public interface IUserService
     {
-        User Add(UserDTO dto);
-        User Get(string playGamesId);
+        AuthResult Add(UserDTO dto);
+        AuthResult Get(string playGamesId);
     }
 }
