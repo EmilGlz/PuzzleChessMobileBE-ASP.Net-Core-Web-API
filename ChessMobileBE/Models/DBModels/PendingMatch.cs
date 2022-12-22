@@ -9,6 +9,6 @@ namespace ChessMobileBE.Models.DBModels
         public string Id { get; set; }
         public string UserId { get; set; }
         public DateTime StartDate { get; set; }
-        public int PuzzleIndex { get; set; }
+        public List<int> PuzzleIndexes { get; set; }
     }
 }

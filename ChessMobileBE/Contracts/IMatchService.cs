@@ -4,7 +4,7 @@ namespace ChessMobileBE.Contracts
 {
     public interface IMatchService
     {
-        Match Add(string hostId, string clientId, int puzzleIndex);
+        Match Add(PendingMatch pendingMatch, string clientId);
         Match AddMove(string userId, string roomId, bool correctMove);
         void Delete(string Id);
         Match Get(string Id);

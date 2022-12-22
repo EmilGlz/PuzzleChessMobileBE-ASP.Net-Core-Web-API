@@ -25,7 +25,7 @@ namespace ChessMobileBE.Services
                 UserId = userId,
                 Id = "",
                 StartDate = DateTime.UtcNow,
-                PuzzleIndex = random.Next(0, 1000),
+                PuzzleIndexes = GenerateRandomList(10)
             };
             _collection.InsertOne(dbModel);
             return dbModel;
@@ -42,6 +42,15 @@ namespace ChessMobileBE.Services
             if (emptyMatch.Count == 0)
                 return null;
             return emptyMatch[0];
+        }
+
+        List<int> GenerateRandomList(int count)
+        {
+            Random random = new Random();
+            List<int> values = new List<int>();
+            for (int i = 0; i < count; ++i)
+                values.Add(random.Next() % 1000);
+            return values;
         }
     }
 }

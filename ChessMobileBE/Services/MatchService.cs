@@ -14,15 +14,17 @@ namespace ChessMobileBE.Services
             _collection = database.GetCollection<Match>("MatchesCollection");
         }
 
-        public Match Add(string hostId, string clientId, int puzzleIndex)
+        public Match Add(PendingMatch pendingMatch, string clientId)
         {
             var dbModel = new Match
             {
                 Id = "",
-                HostId = hostId,
+                HostId = pendingMatch.UserId,
                 ClientId = clientId,
                 StartDate = DateTime.UtcNow,
-                PuzzleIndex = puzzleIndex
+                PuzzleIndexes = pendingMatch.PuzzleIndexes,
+                ClientMoves = new List<bool>(),
+                HostMoves = new List<bool>()
             };
             _collection.InsertOne(dbModel);
             return dbModel;

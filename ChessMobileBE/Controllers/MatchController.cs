@@ -36,7 +36,7 @@ namespace ChessMobileBE.Controllers
                 });
             }
             _pendingMatchService.Delete(emptyMatch.Id);
-            var match = _matchService.Add(emptyMatch.UserId, userId, emptyMatch.PuzzleIndex);
+            var match = _matchService.Add(emptyMatch, userId);
             return Ok(new FindMatchResponse
             {
                 IsPending = false,
