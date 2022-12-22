@@ -10,3 +10,8 @@
 .vs/ChessMobileBE/FileContentIndex/db937257-c778-4682-9193-18059fb8d863.vsidx
 .vs/ChessMobileBE/FileContentIndex/eb714d65-b2d0-47c8-a973-ed3c404f7715.vsidx
 .vs/ChessMobileBE/v17/.suo
+*.vsidx
+*.pdb
+*.dll
+*.cache
+*.sentinel
