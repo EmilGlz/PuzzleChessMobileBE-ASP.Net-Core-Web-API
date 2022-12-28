@@ -45,6 +45,18 @@ namespace ChessMobileBE.Controllers
             });
         }
 
+        [HttpGet]
+        [Route("GetMatchById")]
+        public IActionResult GetMatchById(string id)
+        {
+            var match = _matchService.Get(id);
+            if (match == null)
+            {
+                return NotFound("Match not found");
+            }
+            return Ok(match);
+        }
+
         [HttpDelete]
         [Route("CancelPendingMatch")]
         public IActionResult CancelPendingMatch(string matchId)

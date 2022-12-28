@@ -16,7 +16,7 @@ namespace ChessMobileBE.Services
             _collection = database.GetCollection<User>("UsersCollection");
         }
         
-        public AuthResult Get(string playGamesId)
+        public AuthResult Login(string playGamesId)
         {
             var gettingUser = _collection.Find(u => u.PlayGamesId == playGamesId).ToList();
             if (gettingUser.Count > 0)
@@ -30,6 +30,22 @@ namespace ChessMobileBE.Services
             }
             else
                 return null;
+        }
+
+        public User GetByPGId(string playGamesId)
+        {
+            var gettingUser = _collection.Find(u => u.PlayGamesId == playGamesId).ToList();
+            if (gettingUser.Count == 0)
+                return null;
+            return gettingUser[0];
+        }
+
+        public User GetById(string id)
+        {
+            var gettingUser = _collection.Find(u => u.Id == id).ToList();
+            if (gettingUser.Count == 0)
+                return null;
+            return gettingUser[0];
         }
 
         public AuthResult Add(UserDTO dto)

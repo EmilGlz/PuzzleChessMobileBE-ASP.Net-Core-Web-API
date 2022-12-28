@@ -8,9 +8,13 @@ namespace ChessMobileBE.Hubs
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GameHub: Hub
     {
-        public Task SendJoinedRoomToUser(string hostId, string clientId)
+        public override Task OnConnectedAsync()
         {
-            return Clients.User(hostId).SendAsync("JoinedTheRoom", clientId);
+            return base.OnConnectedAsync();
+        }
+        public Task SendJoinedRoomToUser(JoinRoomModel joinRoomModel)
+        {
+            return Clients.User(joinRoomModel.HostId).SendAsync("JoinedTheRoom", joinRoomModel);
         }
         public Task SendMoveToUser(MoveModel model)
         {

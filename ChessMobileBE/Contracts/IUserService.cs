@@ -7,6 +7,8 @@ namespace ChessMobileBE.Contracts
     public interface IUserService
     {
         AuthResult Add(UserDTO dto);
-        AuthResult Get(string playGamesId);
+        User GetById(string id);
+        User GetByPGId(string playGamesId);
+        AuthResult Login(string playGamesId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using ChessMobileBE.Contracts;
+﻿using AutoMapper;
+using ChessMobileBE.Contracts;
 using ChessMobileBE.Models.DTOs.Requests;
 using ChessMobileBE.Models.DTOs.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,12 @@ namespace ChessMobileBE.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMapper mapper = null)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -22,7 +25,7 @@ namespace ChessMobileBE.Controllers
         [AllowAnonymous]
         public IActionResult Login(UserDTO model)
         {
-            var existingUser = _userService.Get(model.PlayGamesId);
+            var existingUser = _userService.Login(model.PlayGamesId);
             if(existingUser == null)
             {
                 // create user
@@ -30,6 +33,32 @@ namespace ChessMobileBE.Controllers
                 return Ok(newUser);
             }
             return Ok(existingUser);
+        }
+
+        [HttpGet]
+        [Route("GetByPlayGamesId")]
+        public IActionResult GetByPlayGamesId(string userId)
+        {
+            var existingUser = _userService.GetByPGId(userId);
+            if (existingUser == null)
+            {
+                return NotFound("User not found");
+            }
+            var res = _mapper.Map<UserViewModel>(existingUser);
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("GetById")]
+        public IActionResult GetById(string userId)
+        {
+            var existingUser = _userService.GetById(userId);
+            if (existingUser == null)
+            {
+                return NotFound("User not found");
+            }
+            var res = _mapper.Map<UserViewModel>(existingUser);
+            return Ok(res);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ChessMobileBE.Models.DBModels;
 using ChessMobileBE.Models.DTOs.Requests;
+using ChessMobileBE.Models.DTOs.Responses;
 
 namespace ChessMobileBE.Map
 {
@@ -9,6 +10,7 @@ namespace ChessMobileBE.Map
         public AutoMapperProfile()
         {
             CreateMap<PendingMatchDTO, PendingMatch>().ReverseMap();
+            CreateMap<UserViewModel, User>().ReverseMap();
         }
     }
 }
