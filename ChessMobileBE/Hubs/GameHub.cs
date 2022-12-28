@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace ChessMobileBE.Hubs
 {
@@ -10,6 +11,7 @@ namespace ChessMobileBE.Hubs
     {
         public override Task OnConnectedAsync()
         {
+            string authorId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return base.OnConnectedAsync();
         }
         public Task SendJoinedRoomToUser(JoinRoomModel joinRoomModel)

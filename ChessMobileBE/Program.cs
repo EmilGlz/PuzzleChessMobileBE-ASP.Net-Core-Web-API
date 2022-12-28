@@ -1,5 +1,6 @@
 using AutoMapper;
 using ChessMobileBE.Contracts;
+using ChessMobileBE.Hubs;
 using ChessMobileBE.Map;
 using ChessMobileBE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -113,5 +114,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<GameHub>("/gameHub");
 
 app.Run();
