@@ -36,9 +36,9 @@ namespace ChessMobileBE.Services
             _collection.DeleteOne(u => u.Id == id);
         }
 
-        public PendingMatch GetEmptyMatch()
+        public PendingMatch GetEmptyMatch(string userId)
         {
-            var emptyMatch = _collection.Find(pm => !string.IsNullOrEmpty(pm.Id)).ToList();
+            var emptyMatch = _collection.Find(pm => !string.IsNullOrEmpty(pm.Id) && pm.UserId != userId).ToList();
             if (emptyMatch.Count == 0)
                 return null;
             return emptyMatch[0];

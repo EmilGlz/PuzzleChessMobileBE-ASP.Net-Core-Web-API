@@ -11,7 +11,7 @@ namespace ChessMobileBE.Models.DBModels
         public string ClientId { get; set; }
         public DateTime StartDate { get; set; }
         public List<int> PuzzleIndexes { get; set; }
-        public List<bool> HostMoves { get; set; }
-        public List<bool> ClientMoves { get; set; }
+        public List<Move> HostMoves { get; set; }
+        public List<Move> ClientMoves { get; set; }
     }
 }

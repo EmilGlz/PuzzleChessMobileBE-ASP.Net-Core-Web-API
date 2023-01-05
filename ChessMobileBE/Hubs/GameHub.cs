@@ -11,7 +11,7 @@ namespace ChessMobileBE.Hubs
     {
         public override Task OnConnectedAsync()
         {
-            string authorId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //string authorId = Context.User.FindFirst("PlayGamesId").Value;
             return base.OnConnectedAsync();
         }
         public Task SendJoinedRoomToUser(JoinRoomModel joinRoomModel)
@@ -20,7 +20,7 @@ namespace ChessMobileBE.Hubs
         }
         public Task SendMoveToUser(MoveModel model)
         {
-            return Clients.User(model.OpponentId).SendAsync("Moved", model.CorrectMove);
+            return Clients.User(model.OpponentId).SendAsync("Moved", model);
         }
         public Task SendGiveUpToUser(string receiverId, string requesterId)
         {

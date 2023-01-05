@@ -1,5 +1,7 @@
 ﻿using ChessMobileBE.Contracts;
+using ChessMobileBE.Models;
 using ChessMobileBE.Models.DBModels;
+using ChessMobileBE.Models.DTOs.Requests;
 using MongoDB.Driver;
 
 namespace ChessMobileBE.Services
@@ -23,30 +25,35 @@ namespace ChessMobileBE.Services
                 ClientId = clientId,
                 StartDate = DateTime.UtcNow,
                 PuzzleIndexes = pendingMatch.PuzzleIndexes,
-                ClientMoves = new List<bool>(),
-                HostMoves = new List<bool>()
+                ClientMoves = new List<Move>(),
+                HostMoves = new List<Move>()
             };
             _collection.InsertOne(dbModel);
             return dbModel;
         }
 
-        public Match AddMove(string userId, string roomId, bool correctMove)
+        public Match AddMove(AddMoveDTO model)
         {
-            var room = Get(roomId);
-            bool imHost = (room.HostId == userId) && !string.IsNullOrEmpty(userId);
+            var room = Get(model.RoomId);
+            bool imHost = (room.HostId == model.UserId) && !string.IsNullOrEmpty(model.UserId);
+            var pushingObj = new Move
+            {
+                CorrectMove = model.CorrectMove,
+                Date = DateTime.UtcNow,
+                MoveData = model.MoveData
+            };
+            var filter = Builders<Match>.Filter.Eq(r => r.Id, model.RoomId);
             if (imHost)
             {
-                var filter = Builders<Match>.Filter.Eq(r => r.Id, roomId);
-                var update = Builders<Match>.Update.Push(r => r.HostMoves, correctMove);
+                var update = Builders<Match>.Update.Push(r => r.HostMoves, pushingObj);
                 _collection.FindOneAndUpdate(filter, update);
-                room.HostMoves.Add(correctMove);
+                room.HostMoves.Add(pushingObj);
             }
             else
             {
-                var filter = Builders<Match>.Filter.Eq(r => r.Id, roomId);
-                var update = Builders<Match>.Update.Push(r => r.ClientMoves, correctMove);
+                var update = Builders<Match>.Update.Push(r => r.ClientMoves, pushingObj);
                 _collection.FindOneAndUpdate(filter, update);
-                room.ClientMoves.Add(correctMove);
+                room.ClientMoves.Add(pushingObj);
             }
             return room;
         }

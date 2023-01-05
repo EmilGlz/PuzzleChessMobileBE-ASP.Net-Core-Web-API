@@ -4,7 +4,7 @@ namespace ChessMobileBE.Contracts
 {
     public interface IPendingMatchService
     {
-        PendingMatch GetEmptyMatch();
+        PendingMatch GetEmptyMatch(string userId);
         PendingMatch AddNewEmptyMatch(string userId);
         void Delete(string id);
     }

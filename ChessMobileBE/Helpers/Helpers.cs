@@ -18,7 +18,9 @@ namespace ChessMobileBE.Helpers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim("PlayGamesId", user.PlayGamesId)
+
             };
             //var token = new JwtSecurityToken(_config.GetValue<string>("Jwt:Issuer"),
             var token = new JwtSecurityToken(MyConfigurationManager.AppSetting.GetSection("Jwt").GetSection("Issuer").Value,

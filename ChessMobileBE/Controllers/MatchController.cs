@@ -20,7 +20,7 @@ namespace ChessMobileBE.Controllers
         [Route("FindRoom")]
         public IActionResult FindRoom(string userId)
         {
-            var emptyMatch = _pendingMatchService.GetEmptyMatch();
+            var emptyMatch = _pendingMatchService.GetEmptyMatch(userId);
             if (emptyMatch == null) // add new room and wait...
             {
                 var newMatch = _pendingMatchService.AddNewEmptyMatch(userId);
@@ -72,7 +72,7 @@ namespace ChessMobileBE.Controllers
             var room = _matchService.Get(model.RoomId);
             if (room == null)
                 return NotFound("Room not found");
-            var roomUpdated = _matchService.AddMove(model.UserId, model.RoomId, model.CorrectMove);
+            var roomUpdated = _matchService.AddMove(model);
             return Ok(roomUpdated);
         }
     }

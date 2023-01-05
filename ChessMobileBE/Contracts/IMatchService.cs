@@ -1,11 +1,12 @@
 ﻿using ChessMobileBE.Models.DBModels;
+using ChessMobileBE.Models.DTOs.Requests;
 
 namespace ChessMobileBE.Contracts
 {
     public interface IMatchService
     {
         Match Add(PendingMatch pendingMatch, string clientId);
-        Match AddMove(string userId, string roomId, bool correctMove);
+        Match AddMove(AddMoveDTO model);
         void Delete(string Id);
         Match Get(string Id);
     }
