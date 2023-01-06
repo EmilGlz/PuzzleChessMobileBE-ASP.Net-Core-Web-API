@@ -11,6 +11,9 @@ namespace ChessMobileBE.Models.DBModels
         public string Username { get; set; }
         public string Email { get; set; }
         public DateTime RegisterDate { get; set; }
+        public int VictoryCount { get; set; }
+        public int DrawCount { get; set; }
+        public int DefeatCount { get; set; }
 
         // history
         // profile datas ...

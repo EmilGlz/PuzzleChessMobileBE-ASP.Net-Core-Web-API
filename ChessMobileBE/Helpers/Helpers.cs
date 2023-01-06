@@ -80,4 +80,12 @@ namespace ChessMobileBE.Helpers
             return match.ClientMoves.FindAll(m => m.CorrectMove).Count;
         }
     }
+
+    public enum WinState
+    {
+        None = 0,
+        Win = 1,
+        Lose = 2,
+        Draw = 3
+    }
 }

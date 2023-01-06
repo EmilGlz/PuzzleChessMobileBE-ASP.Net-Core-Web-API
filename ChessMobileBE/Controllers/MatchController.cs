@@ -1,4 +1,5 @@
 ﻿using ChessMobileBE.Contracts;
+using ChessMobileBE.Helpers;
 using ChessMobileBE.Models.DTOs.Requests;
 using ChessMobileBE.Models.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace ChessMobileBE.Controllers
     {
         private readonly IPendingMatchService _pendingMatchService;
         private readonly IMatchService _matchService;
-        public MatchController(IMatchService matchService, IPendingMatchService pendingMatchService)
+        private readonly IUserService _userService;
+        public MatchController(IMatchService matchService, IPendingMatchService pendingMatchService, IUserService userServoce)
         {
             _matchService = matchService;
             _pendingMatchService = pendingMatchService;
+            _userService = userServoce;
         }
         [HttpGet]
         [Route("FindRoom")]
@@ -93,15 +96,46 @@ namespace ChessMobileBE.Controllers
                 var hostCorrectMoveCount = Helpers.Helpers.HostCorrectMoveCount(room);
                 var clientCorrectMoveCount = Helpers.Helpers.ClientCorrectMoveCount(room);
                 bool currentUserIsHost = Helpers.Helpers.IsHostInCurrentOnlineMatch(room, model.UserId).Value;
-                bool currentUserWon = (currentUserIsHost && hostCorrectMoveCount > clientCorrectMoveCount)||
-                    (!currentUserIsHost && hostCorrectMoveCount < clientCorrectMoveCount);
-                var res = new FinishMatchResponse { 
+                //bool currentUserWon = (currentUserIsHost && hostCorrectMoveCount > clientCorrectMoveCount)
+                //    || (!currentUserIsHost && hostCorrectMoveCount < clientCorrectMoveCount);
+                WinState winState;
+                if (currentUserIsHost)
+                {
+                    if (hostCorrectMoveCount > clientCorrectMoveCount)
+                    {
+                        winState = WinState.Win;
+                    }
+                    else if (hostCorrectMoveCount == clientCorrectMoveCount)
+                    {
+                        winState = WinState.Draw;
+                    }
+                    else
+                    {
+                        winState = WinState.Lose;
+                    }
+                }
+                else
+                {
+                    if (hostCorrectMoveCount < clientCorrectMoveCount)
+                    {
+                        winState = WinState.Win;
+                    }
+                    else if (hostCorrectMoveCount == clientCorrectMoveCount)
+                    {
+                        winState = WinState.Draw;
+                    }
+                    else
+                    {
+                        winState = WinState.Lose;
+                    }
+                }
+                var user = _userService.AddMatchWinState(winState, model.UserId);
+                var res = new FinishMatchResponse {
                     RoomId = room.Id,
-                    UserId=model.UserId,
-                    OpponendId = currentUserIsHost ? room.HostId : room.ClientId,
                     UserCorrectMoveCount = currentUserIsHost ? hostCorrectMoveCount : clientCorrectMoveCount,
                     OpponentCorrectMoveCount = currentUserIsHost ? clientCorrectMoveCount : hostCorrectMoveCount,
-                    Victory = currentUserWon
+                    VictoryState = winState,
+                    UserModel = user
                 };
                 return Ok(res);
             }

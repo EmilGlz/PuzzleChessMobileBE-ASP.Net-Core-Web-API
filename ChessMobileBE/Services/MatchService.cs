@@ -26,7 +26,8 @@ namespace ChessMobileBE.Services
                 StartDate = DateTime.UtcNow,
                 PuzzleIndexes = pendingMatch.PuzzleIndexes,
                 ClientMoves = new List<Move>(),
-                HostMoves = new List<Move>()
+                HostMoves = new List<Move>(),
+                MatchTimeInSeconds = int.Parse(MyConfigurationManager.AppSetting.GetSection("MatchTimeInSeconds").Value)
             };
             _collection.InsertOne(dbModel);
             return dbModel;

@@ -1,4 +1,5 @@
 ﻿using ChessMobileBE.Contracts;
+using ChessMobileBE.Helpers;
 using ChessMobileBE.Models.DBModels;
 using ChessMobileBE.Models.DTOs.Requests;
 using ChessMobileBE.Models.DTOs.Responses;
@@ -67,5 +68,30 @@ namespace ChessMobileBE.Services
             };
         }
 
+        public User AddMatchWinState(WinState winState, string userId)
+        {
+            var user = GetById(userId);
+
+            var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            if (winState == WinState.Win)
+            {
+                user.VictoryCount ++;
+                var update = Builders<User>.Update.Set(r => r.VictoryCount, user.VictoryCount);
+                _collection.FindOneAndUpdate(filter, update);
+            }
+            else if (winState == WinState.Draw)
+            {
+                user.DrawCount++;
+                var update = Builders<User>.Update.Set(r => r.DrawCount, user.DrawCount);
+                _collection.FindOneAndUpdate(filter, update);
+            }
+            else if (winState == WinState.Lose)
+            {
+                user.DefeatCount++;
+                var update = Builders<User>.Update.Set(r => r.DefeatCount, user.DefeatCount);
+                _collection.FindOneAndUpdate(filter, update);
+            }
+            return user;
+        }
     }
 }

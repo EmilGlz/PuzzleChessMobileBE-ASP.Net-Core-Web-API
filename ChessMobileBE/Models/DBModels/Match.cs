@@ -13,5 +13,6 @@ namespace ChessMobileBE.Models.DBModels
         public List<int> PuzzleIndexes { get; set; }
         public List<Move> HostMoves { get; set; }
         public List<Move> ClientMoves { get; set; }
+        public int MatchTimeInSeconds { get; set; }
     }
 }
