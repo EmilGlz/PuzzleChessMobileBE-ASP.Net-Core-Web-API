@@ -11,7 +11,7 @@ namespace ChessMobileBE.Helpers
     {
         public static string Generate(User user)
         {
-            var keyString = MyConfigurationManager.AppSetting.GetSection("Jwt").GetSection("SecretKey").Value; 
+            var keyString = MyConfigurationManager.AppSetting.GetSection("Jwt").GetSection("SecretKey").Value;
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
@@ -50,6 +50,34 @@ namespace ChessMobileBE.Helpers
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(token);
             return jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+        }
+
+        public static bool? IsHostInCurrentOnlineMatch(Match match, string userId)
+        {
+            if (match.HostId == userId)
+                return true;
+            else if (match.ClientId == userId)
+                return false;
+            return null;
+        }
+
+        public static bool MatchIsFinishedByTime(Match match)
+        {
+            var matchTimeInSeconds = int.Parse(MyConfigurationManager.AppSetting.GetSection("MatchTimeInSeconds").Value);
+            var matchDeadline = match.StartDate.AddSeconds(matchTimeInSeconds);
+            if (matchDeadline <= DateTime.UtcNow)
+                return true;
+            return false;
+        }
+
+        public static int HostCorrectMoveCount(Match match)
+        {
+            return match.HostMoves.FindAll(m => m.CorrectMove).Count;
+        }
+
+        public static int ClientCorrectMoveCount(Match match)
+        {
+            return match.ClientMoves.FindAll(m => m.CorrectMove).Count;
         }
     }
 }

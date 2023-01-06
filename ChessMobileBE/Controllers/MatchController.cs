@@ -75,5 +75,38 @@ namespace ChessMobileBE.Controllers
             var roomUpdated = _matchService.AddMove(model);
             return Ok(roomUpdated);
         }
+
+        [HttpPut]
+        [Route("FinishMatch")]
+        public IActionResult FinishMatch(FinishMatchDTO model)
+        {
+            // check time, if time is finished:
+            // check correct moves count
+            // return result of moves and add to user records
+            var room = _matchService.Get(model.RoomId);
+            if (room == null)
+                return NotFound("Room not found");
+            if (!Helpers.Helpers.IsHostInCurrentOnlineMatch(room, model.UserId).HasValue)
+                return NotFound("User not found in the room");
+            if (Helpers.Helpers.MatchIsFinishedByTime(room))
+            {
+                var hostCorrectMoveCount = Helpers.Helpers.HostCorrectMoveCount(room);
+                var clientCorrectMoveCount = Helpers.Helpers.ClientCorrectMoveCount(room);
+                bool currentUserIsHost = Helpers.Helpers.IsHostInCurrentOnlineMatch(room, model.UserId).Value;
+                bool currentUserWon = (currentUserIsHost && hostCorrectMoveCount > clientCorrectMoveCount)||
+                    (!currentUserIsHost && hostCorrectMoveCount < clientCorrectMoveCount);
+                var res = new FinishMatchResponse { 
+                    RoomId = room.Id,
+                    UserId=model.UserId,
+                    OpponendId = currentUserIsHost ? room.HostId : room.ClientId,
+                    UserCorrectMoveCount = currentUserIsHost ? hostCorrectMoveCount : clientCorrectMoveCount,
+                    OpponentCorrectMoveCount = currentUserIsHost ? clientCorrectMoveCount : hostCorrectMoveCount,
+                    Victory = currentUserWon
+                };
+                return Ok(res);
+            }
+            return Ok();
+        }
+
     }
 }
