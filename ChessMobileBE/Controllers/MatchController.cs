@@ -96,8 +96,6 @@ namespace ChessMobileBE.Controllers
                 var hostCorrectMoveCount = Helpers.Helpers.HostCorrectMoveCount(room);
                 var clientCorrectMoveCount = Helpers.Helpers.ClientCorrectMoveCount(room);
                 bool currentUserIsHost = Helpers.Helpers.IsHostInCurrentOnlineMatch(room, model.UserId).Value;
-                //bool currentUserWon = (currentUserIsHost && hostCorrectMoveCount > clientCorrectMoveCount)
-                //    || (!currentUserIsHost && hostCorrectMoveCount < clientCorrectMoveCount);
                 WinState winState;
                 if (currentUserIsHost)
                 {
