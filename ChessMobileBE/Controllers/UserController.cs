@@ -21,6 +21,21 @@ namespace ChessMobileBE.Controllers
         }
 
         [HttpPost]
+        [Route("LoginAsGuest")]
+        [AllowAnonymous]
+        public IActionResult LoginAsGuest()
+        {
+            Random rnd = new Random();
+            int num = rnd.Next(1000);
+            var user = _userService.Add(new UserDTO {
+                Email = "Guest",
+                PlayGamesId = "Guest",
+                Username = "Player" + num
+            });
+            return Ok(user);
+        }
+
+        [HttpPost]
         [Route("Login")]
         [AllowAnonymous]
         public IActionResult Login(UserDTO model)

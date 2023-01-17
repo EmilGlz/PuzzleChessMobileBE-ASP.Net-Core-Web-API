@@ -91,53 +91,50 @@ namespace ChessMobileBE.Controllers
                 return NotFound("Room not found");
             if (!Helpers.Helpers.IsHostInCurrentOnlineMatch(room, model.UserId).HasValue)
                 return NotFound("User not found in the room");
-            if (Helpers.Helpers.MatchIsFinishedByTime(room))
+            var hostCorrectMoveCount = Helpers.Helpers.HostCorrectMoveCount(room);
+            var clientCorrectMoveCount = Helpers.Helpers.ClientCorrectMoveCount(room);
+            bool currentUserIsHost = Helpers.Helpers.IsHostInCurrentOnlineMatch(room, model.UserId).Value;
+            WinState winState;
+            if (currentUserIsHost)
             {
-                var hostCorrectMoveCount = Helpers.Helpers.HostCorrectMoveCount(room);
-                var clientCorrectMoveCount = Helpers.Helpers.ClientCorrectMoveCount(room);
-                bool currentUserIsHost = Helpers.Helpers.IsHostInCurrentOnlineMatch(room, model.UserId).Value;
-                WinState winState;
-                if (currentUserIsHost)
+                if (hostCorrectMoveCount > clientCorrectMoveCount)
                 {
-                    if (hostCorrectMoveCount > clientCorrectMoveCount)
-                    {
-                        winState = WinState.Win;
-                    }
-                    else if (hostCorrectMoveCount == clientCorrectMoveCount)
-                    {
-                        winState = WinState.Draw;
-                    }
-                    else
-                    {
-                        winState = WinState.Lose;
-                    }
+                    winState = WinState.Win;
+                }
+                else if (hostCorrectMoveCount == clientCorrectMoveCount)
+                {
+                    winState = WinState.Draw;
                 }
                 else
                 {
-                    if (hostCorrectMoveCount < clientCorrectMoveCount)
-                    {
-                        winState = WinState.Win;
-                    }
-                    else if (hostCorrectMoveCount == clientCorrectMoveCount)
-                    {
-                        winState = WinState.Draw;
-                    }
-                    else
-                    {
-                        winState = WinState.Lose;
-                    }
+                    winState = WinState.Lose;
                 }
-                var user = _userService.AddMatchWinState(winState, model.UserId);
-                var res = new FinishMatchResponse {
-                    RoomId = room.Id,
-                    UserCorrectMoveCount = currentUserIsHost ? hostCorrectMoveCount : clientCorrectMoveCount,
-                    OpponentCorrectMoveCount = currentUserIsHost ? clientCorrectMoveCount : hostCorrectMoveCount,
-                    VictoryState = winState,
-                    UserModel = user
-                };
-                return Ok(res);
             }
-            return Ok();
+            else
+            {
+                if (hostCorrectMoveCount < clientCorrectMoveCount)
+                {
+                    winState = WinState.Win;
+                }
+                else if (hostCorrectMoveCount == clientCorrectMoveCount)
+                {
+                    winState = WinState.Draw;
+                }
+                else
+                {
+                    winState = WinState.Lose;
+                }
+            }
+            var user = _userService.AddMatchWinState(winState, model.UserId);
+            var res = new FinishMatchResponse
+            {
+                RoomId = room.Id,
+                UserCorrectMoveCount = currentUserIsHost ? hostCorrectMoveCount : clientCorrectMoveCount,
+                OpponentCorrectMoveCount = currentUserIsHost ? clientCorrectMoveCount : hostCorrectMoveCount,
+                VictoryState = winState,
+                UserModel = user
+            };
+            return Ok(res);
         }
 
     }
