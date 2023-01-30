@@ -2,6 +2,7 @@
 using ChessMobileBE.Helpers;
 using ChessMobileBE.Models.DTOs.Requests;
 using ChessMobileBE.Models.DTOs.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChessMobileBE.Controllers
@@ -137,5 +138,16 @@ namespace ChessMobileBE.Controllers
             return Ok(res);
         }
 
+
+        // TEST
+        [HttpDelete]
+        [Route("RemoveAll")]
+        [AllowAnonymous]
+        public IActionResult RemoveAll()
+        {
+            _matchService.RemoveAll();
+            _userService.RemoveAll();
+            return Ok();
+        }
     }
 }

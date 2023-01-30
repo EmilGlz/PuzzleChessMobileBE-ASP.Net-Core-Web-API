@@ -9,5 +9,6 @@ namespace ChessMobileBE.Contracts
         Match AddMove(AddMoveDTO model);
         void Delete(string Id);
         Match Get(string Id);
+        void RemoveAll();
     }
 }

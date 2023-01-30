@@ -74,5 +74,10 @@ namespace ChessMobileBE.Services
             _collection.DeleteOne(m => m.Id == Id);
         }
 
+        public void RemoveAll()
+        {
+            var filter = Builders<Match>.Filter.Empty;
+            _collection.DeleteMany(filter);
+        }
     }
 }

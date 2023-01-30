@@ -57,7 +57,16 @@ namespace ChessMobileBE.Services
                 Email = dto.Email,
                 PlayGamesId = dto.PlayGamesId,
                 Username = dto.Username,
-                RegisterDate = DateTime.UtcNow
+                RegisterDate = DateTime.UtcNow,
+                DefeatCount = 0,
+                DrawCount = 0,
+                VictoryCount = 0,
+                MateInOneLevel = 1,
+                MateInTwoLevel = 1,
+                MateInThreeLevel = 0,
+                MateInFourLevel = 0,
+                MateInFiveLevel = 0,
+                GMPlaysLevel = 0,
             };
             _collection.InsertOne(newUser);
             var token = Helpers.Helpers.Generate(newUser);
@@ -92,6 +101,12 @@ namespace ChessMobileBE.Services
                 _collection.FindOneAndUpdate(filter, update);
             }
             return user;
+        }
+
+        public void RemoveAll()
+        {
+            var filter = Builders<User>.Filter.Empty;
+            _collection.DeleteMany(filter);
         }
     }
 }

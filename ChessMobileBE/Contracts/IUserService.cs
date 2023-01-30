@@ -12,5 +12,6 @@ namespace ChessMobileBE.Contracts
         User GetById(string id);
         User GetByPGId(string playGamesId);
         AuthResult Login(string playGamesId);
+        void RemoveAll();
     }
 }

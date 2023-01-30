@@ -14,6 +14,12 @@ namespace ChessMobileBE.Models.DBModels
         public int VictoryCount { get; set; }
         public int DrawCount { get; set; }
         public int DefeatCount { get; set; }
+        public int MateInOneLevel { get; set; }
+        public int MateInTwoLevel { get; set; }
+        public int MateInThreeLevel { get; set; }
+        public int MateInFourLevel { get; set; }
+        public int MateInFiveLevel { get; set; }
+        public int GMPlaysLevel { get; set; }
 
         // history
         // profile datas ...
