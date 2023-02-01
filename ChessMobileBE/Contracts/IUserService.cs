@@ -11,6 +11,8 @@ namespace ChessMobileBE.Contracts
         User AddMatchWinState(WinState winState, string userId);
         User GetById(string id);
         User GetByPGId(string playGamesId);
+        int GetMyRank(string userId);
+        List<User> GetTopRankedUsers(int count);
         AuthResult Login(string playGamesId);
         void RemoveAll();
     }

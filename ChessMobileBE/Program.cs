@@ -31,6 +31,7 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IPendingMatchService, PendingMatchService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRankingService, RankingService>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "GameBackendAuth", Version = "v1" });

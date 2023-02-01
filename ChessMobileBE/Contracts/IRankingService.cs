@@ -7,5 +7,6 @@ namespace ChessMobileBE.Contracts
 {
     public interface IRankingService
     {
+        Rank CheckRank(RankDTO dto);
     }
 }

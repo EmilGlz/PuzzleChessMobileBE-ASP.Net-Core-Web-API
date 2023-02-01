@@ -16,7 +16,25 @@ namespace ChessMobileBE.Services
             var database = client.GetDatabase("Users");
             _collection = database.GetCollection<User>("UsersCollection");
         }
-        
+
+        public int GetMyRank(string userId)
+        {
+            var sortedUsers = _collection.Find(_ => true).ToList().OrderBy(u => u.VictoryCount).Reverse().ToList();
+            var myRank = sortedUsers.FindIndex(u => u.Id == userId);
+            return myRank;
+        }
+
+        public List<User> GetTopRankedUsers(int count)
+        {
+            var sortedUsers = _collection.Find(_ => true).ToList().OrderBy(u => u.VictoryCount).Reverse().ToList();
+            if (sortedUsers.Count < count)
+            {
+                return sortedUsers;
+            }
+            var res = sortedUsers.GetRange(sortedUsers.Count - count, sortedUsers.Count);
+            return res;
+        }
+
         public AuthResult Login(string playGamesId)
         {
             var gettingUser = _collection.Find(u => u.PlayGamesId == playGamesId).ToList();

@@ -12,12 +12,14 @@ namespace ChessMobileBE.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IRankingService _rankService;
         private readonly IMapper _mapper;
 
-        public UserController(IUserService userService, IMapper mapper = null)
+        public UserController(IUserService userService, IMapper mapper, IRankingService rankService)
         {
             _userService = userService;
             _mapper = mapper;
+            _rankService = rankService;
         }
 
         [HttpPost]
@@ -60,6 +62,27 @@ namespace ChessMobileBE.Controllers
                 return NotFound("User not found");
             }
             var res = _mapper.Map<UserViewModel>(existingUser);
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("GetTopRankedUsers")]
+        public IActionResult GetTopRankedUsers(int count)
+        {
+            var users = _userService.GetTopRankedUsers(count);
+            var res = new List<UserViewModel>();
+            for (int i = 0; i < users.Count; i++)
+            {
+                res.Add(_mapper.Map<UserViewModel>(users[i]));
+            }
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("GetMyRank")]
+        public IActionResult GetMyRank(string userId)
+        {
+            var res = _userService.GetMyRank(userId);
             return Ok(res);
         }
 

@@ -19,6 +19,12 @@ namespace ChessMobileBE.Services
 
         public Rank CheckRank(RankDTO dto)
         {
+            var allRanks = _collection.Find(_ => true).ToList().OrderBy(r => r.Value);
+            var myRank = allRanks.FirstOrDefault(r => r.UserId == dto.UserId);
+            if (myRank == null)
+            {
+
+            }
             // TODO check if rankValue is top 10/20/30/.., add to db
             return new Rank();
         }
