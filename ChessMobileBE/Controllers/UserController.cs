@@ -72,9 +72,7 @@ namespace ChessMobileBE.Controllers
             var users = _userService.GetTopRankedUsers(count);
             var res = new List<UserViewModel>();
             for (int i = 0; i < users.Count; i++)
-            {
                 res.Add(_mapper.Map<UserViewModel>(users[i]));
-            }
             return Ok(res);
         }
 
@@ -96,6 +94,16 @@ namespace ChessMobileBE.Controllers
                 return NotFound("User not found");
             }
             var res = _mapper.Map<UserViewModel>(existingUser);
+            return Ok(res);
+        }
+
+        [HttpPost]
+        [Route("AddMatchCount")]
+        public IActionResult AddMatchCount(string userId)
+        {
+            var res = _userService.AddMatchCount(userId);
+            if (res == null)
+                return NotFound("User not found");
             return Ok(res);
         }
     }

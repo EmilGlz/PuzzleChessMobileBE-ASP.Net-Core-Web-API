@@ -69,9 +69,43 @@ namespace ChessMobileBE.Services
             return gettingRoom[0];
         }
 
+        public List<Match> GetRoomsByUserId(string userId)
+        {
+            var res = new List<Match>();
+            var gettingRoom = _collection.Find(r => r.HostId == userId).ToList();
+            var gettingRoom1 = _collection.Find(r => r.ClientId == userId).ToList();
+            res.AddRange(gettingRoom);
+            res.AddRange(gettingRoom1);
+            return res;
+        }
+
         public void Delete(string Id)
         {
             _collection.DeleteOne(m => m.Id == Id);
+        }
+
+        public void LoseAllRooms(string userId)
+        {
+            var rooms = GetRoomsByUserId(userId);
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                LoseInOneRoom(userId, rooms[i]);
+            }
+        }
+
+        public void LoseInOneRoom(string userId, Match room)
+        {
+            var filter = Builders<Match>.Filter.Eq(m => m.Id, room.Id);
+            if (Helpers.Helpers.IsHostInCurrentOnlineMatch(room, userId).Value)
+            {
+                var update = Builders<Match>.Update.Set(r => r.HostExited, true);
+                _collection.FindOneAndUpdate(filter, update);
+            }
+            else
+            {
+                var update = Builders<Match>.Update.Set(r => r.ClientExited, true);
+                _collection.FindOneAndUpdate(filter, update);
+            }
         }
 
         public void RemoveAll()
@@ -79,5 +113,6 @@ namespace ChessMobileBE.Services
             var filter = Builders<Match>.Filter.Empty;
             _collection.DeleteMany(filter);
         }
+
     }
 }

@@ -98,8 +98,9 @@ namespace ChessMobileBE.Services
         public User AddMatchWinState(WinState winState, string userId)
         {
             var user = GetById(userId);
-
+            user.MatchCount++;
             var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            var matchCountUpdate = Builders<User>.Update.Set(r => r.MatchCount, user.MatchCount);
             if (winState == WinState.Win)
             {
                 user.VictoryCount ++;
@@ -118,6 +119,19 @@ namespace ChessMobileBE.Services
                 var update = Builders<User>.Update.Set(r => r.DefeatCount, user.DefeatCount);
                 _collection.FindOneAndUpdate(filter, update);
             }
+            _collection.FindOneAndUpdate(filter, matchCountUpdate);
+            return user;
+        }
+
+        public User AddMatchCount(string userId)
+        {
+            var user = GetById(userId);
+            if (user == null)
+                return null;
+            user.MatchCount++;
+            var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            var update = Builders<User>.Update.Set(u => u.MatchCount, user.MatchCount);
+            _collection.UpdateOne(filter, update);
             return user;
         }
 

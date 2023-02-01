@@ -138,7 +138,6 @@ namespace ChessMobileBE.Controllers
             return Ok(res);
         }
 
-
         // TEST
         [HttpDelete]
         [Route("RemoveAll")]

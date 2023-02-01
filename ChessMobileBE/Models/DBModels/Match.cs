@@ -14,5 +14,7 @@ namespace ChessMobileBE.Models.DBModels
         public List<Move> HostMoves { get; set; }
         public List<Move> ClientMoves { get; set; }
         public int MatchTimeInSeconds { get; set; }
+        public bool HostExited { get; set; }
+        public bool ClientExited { get; set; }
     }
 }

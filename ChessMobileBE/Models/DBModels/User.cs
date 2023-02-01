@@ -10,7 +10,9 @@ namespace ChessMobileBE.Models.DBModels
         public string PlayGamesId { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
+        public string LastMatchId { get; set; }
         public DateTime RegisterDate { get; set; }
+        public int MatchCount { get; set; }
         public int VictoryCount { get; set; }
         public int DrawCount { get; set; }
         public int DefeatCount { get; set; }
