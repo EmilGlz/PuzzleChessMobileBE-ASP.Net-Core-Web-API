@@ -22,8 +22,14 @@ namespace ChessMobileBE.Models.DBModels
         public int MateInFourLevel { get; set; }
         public int MateInFiveLevel { get; set; }
         public int GMPlaysLevel { get; set; }
+        public bool GMPuzzles { get; set; }
+        public bool AddRemove { get; set; }
+        public Energy EnergyForOneDay { get; set; }
+    }
 
-        // history
-        // profile datas ...
+    public class Energy
+    {
+        public bool IsBought { get; set; }
+        public DateTime BuyTime { get; set; }
     }
 }

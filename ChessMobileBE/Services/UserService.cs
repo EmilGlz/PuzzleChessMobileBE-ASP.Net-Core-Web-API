@@ -135,10 +135,49 @@ namespace ChessMobileBE.Services
             return user;
         }
 
+        public User UpdateEnergyForOneDay(string userId)
+        {
+            var user = GetById(userId);
+            if (user == null)
+                return null;
+            user.EnergyForOneDay = new Energy {
+                BuyTime = DateTime.UtcNow,
+                IsBought = true
+            };
+            var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            var update = Builders<User>.Update.Set(u => u.EnergyForOneDay, user.EnergyForOneDay);
+            _collection.UpdateOne(filter, update);
+            return user;
+        }
+
         public void RemoveAll()
         {
             var filter = Builders<User>.Filter.Empty;
             _collection.DeleteMany(filter);
+        }
+
+        public User BuyAddRemove(string userId)
+        {
+            var user = GetById(userId);
+            if (user == null)
+                return null;
+            user.AddRemove = true;
+            var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            var update = Builders<User>.Update.Set(u => u.AddRemove, user.AddRemove);
+            _collection.UpdateOne(filter, update);
+            return user;
+        }
+
+        public User BuyGMPuzzles(string userId)
+        {
+            var user = GetById(userId);
+            if (user == null)
+                return null;
+            user.GMPuzzles = true;
+            var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            var update = Builders<User>.Update.Set(u => u.GMPuzzles, user.GMPuzzles);
+            _collection.UpdateOne(filter, update);
+            return user;
         }
     }
 }

@@ -16,5 +16,8 @@ namespace ChessMobileBE.Contracts
         List<User> GetTopRankedUsers(int count);
         AuthResult Login(string playGamesId);
         void RemoveAll();
+        User UpdateEnergyForOneDay(string userId);
+        User BuyAddRemove(string userId);
+        User BuyGMPuzzles(string userId);
     }
 }

@@ -106,5 +106,36 @@ namespace ChessMobileBE.Controllers
                 return NotFound("User not found");
             return Ok(res);
         }
+
+        [HttpPut]
+        [Route("UpdateEnergyForOneDay")]
+        public IActionResult UpdateEnergyForOneDay(string userId)
+        {
+            var res = _userService.UpdateEnergyForOneDay(userId);
+            if (res == null)
+                return NotFound("User not found");
+            return Ok(res);
+        }
+
+        [HttpPut]
+        [Route("BuyAddRemove")]
+        public IActionResult BuyAddRemove(string userId)
+        {
+            var res = _userService.BuyAddRemove(userId);
+            if (res == null)
+                return NotFound("User not found");
+            return Ok(res);
+        }
+
+        [HttpPut]
+        [Route("BuyGMPuzzles")]
+        public IActionResult BuyGMPuzzles(string userId)
+        {
+            var res = _userService.BuyGMPuzzles(userId);
+            if (res == null)
+                return NotFound("User not found");
+            return Ok(res);
+        }
+
     }
 }
