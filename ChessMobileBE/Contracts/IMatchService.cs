@@ -10,6 +10,7 @@ namespace ChessMobileBE.Contracts
         void Delete(string Id);
         Match Get(string Id);
         List<Match> GetRoomsByUserId(string userId);
+        Match GiveUp(string userId, string roomId);
         void LoseAllRooms(string userId);
         void RemoveAll();
     }

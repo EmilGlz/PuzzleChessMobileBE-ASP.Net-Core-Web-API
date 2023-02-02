@@ -108,6 +108,25 @@ namespace ChessMobileBE.Services
             }
         }
 
+        public Match GiveUp(string userId, string roomId)
+        {
+            var room = Get(roomId);
+            var filter = Builders<Match>.Filter.Eq(m => m.Id, roomId);
+            if (Helpers.Helpers.IsHostInCurrentOnlineMatch(room, userId).Value)
+            {
+                room.HostExited = true;
+                var update = Builders<Match>.Update.Set(r => r.HostExited, true);
+                _collection.FindOneAndUpdate(filter, update);
+            }
+            else
+            {
+                room.ClientExited = true;
+                var update = Builders<Match>.Update.Set(r => r.ClientExited, true);
+                _collection.FindOneAndUpdate(filter, update);
+            }
+            return room;
+        }
+
         public void RemoveAll()
         {
             var filter = Builders<Match>.Filter.Empty;

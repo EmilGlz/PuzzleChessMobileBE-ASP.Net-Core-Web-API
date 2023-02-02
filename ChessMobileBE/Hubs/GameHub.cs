@@ -15,21 +15,18 @@ namespace ChessMobileBE.Hubs
         {
             _matchService = matchService;
         }
-
         public override Task OnConnectedAsync()
         {
             //string authorId = Context.User.FindFirst("PlayGamesId").Value;
             return base.OnConnectedAsync();
         }
-
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             await base.OnDisconnectedAsync(exception);
             string userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            _matchService.LoseAllRooms(userId);
+            //_matchService.LoseAllRooms(userId);
             await Clients.All.SendAsync("OnDisconnected", userId);
         }
-
         public Task SendJoinedRoomToUser(JoinRoomModel joinRoomModel)
         {
             return Clients.User(joinRoomModel.HostId).SendAsync("JoinedTheRoom", joinRoomModel);
@@ -38,9 +35,11 @@ namespace ChessMobileBE.Hubs
         {
             return Clients.User(model.OpponentId).SendAsync("Moved", model);
         }
-        public Task SendGiveUpToUser(string receiverId, string requesterId)
+        public Task SendGiveUpToUser(string receiverId, string roomId)
         {
-            return Clients.User(receiverId).SendAsync("GaveUp", requesterId);
+            string userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var room = _matchService.GiveUp(userId, roomId);
+            return Clients.User(receiverId).SendAsync("GaveUp", userId);
         }
     }
 }
