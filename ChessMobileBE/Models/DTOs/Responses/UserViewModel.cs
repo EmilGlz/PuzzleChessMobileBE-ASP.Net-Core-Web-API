@@ -9,5 +9,6 @@
         public int VictoryCount { get; set; }
         public int DrawCount { get; set; }
         public int DefeatCount { get; set; }
+        public int MatchCount { get; set; }
     }
 }

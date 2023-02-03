@@ -9,7 +9,7 @@ namespace ChessMobileBE.Contracts
     {
         AuthResult Add(UserDTO dto);
         User AddMatchCount(string userId);
-        User AddMatchWinState(WinState winState, string userId);
+        User AddMatchWinState(WinState winState, string userId, string roomId);
         User GetById(string id);
         User GetByPGId(string playGamesId);
         int GetMyRank(string userId);
@@ -19,5 +19,6 @@ namespace ChessMobileBE.Contracts
         User UpdateEnergyForOneDay(string userId);
         User BuyAddRemove(string userId);
         User BuyGMPuzzles(string userId);
+        //void FinishMatchIfSomeoneExits(Match room);
     }
 }

@@ -84,13 +84,14 @@ namespace ChessMobileBE.Services
             _collection.DeleteOne(m => m.Id == Id);
         }
 
-        public void LoseAllRooms(string userId)
+        public List<Match> LoseAllRooms(string userId)
         {
             var rooms = GetRoomsByUserId(userId);
             for (int i = 0; i < rooms.Count; i++)
             {
                 LoseInOneRoom(userId, rooms[i]);
             }
+            return rooms;
         }
 
         public void LoseInOneRoom(string userId, Match room)

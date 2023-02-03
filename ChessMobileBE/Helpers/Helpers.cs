@@ -79,6 +79,15 @@ namespace ChessMobileBE.Helpers
         {
             return match.ClientMoves.FindAll(m => m.CorrectMove).Count;
         }
+
+        public static string OppIdOfRoom(Match match, string myUserId)
+        {
+            if (match.HostId == myUserId)
+                return match.ClientId;
+            else if (match.ClientId == myUserId)
+                return match.HostId;
+            return "";
+        }
     }
 
     public enum WinState

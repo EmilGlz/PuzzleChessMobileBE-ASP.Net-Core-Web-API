@@ -84,9 +84,6 @@ namespace ChessMobileBE.Controllers
         [Route("FinishMatch")]
         public IActionResult FinishMatch(FinishMatchDTO model)
         {
-            // check time, if time is finished:
-            // check correct moves count
-            // return result of moves and add to user records
             var room = _matchService.Get(model.RoomId);
             if (room == null)
                 return NotFound("Room not found");
@@ -126,7 +123,8 @@ namespace ChessMobileBE.Controllers
                     winState = WinState.Lose;
                 }
             }
-            var user = _userService.AddMatchWinState(winState, model.UserId);
+            var user = _userService.AddMatchWinState(winState, model.UserId, room.Id);
+            var user1 = _userService.AddMatchWinState(winState, Helpers.Helpers.OppIdOfRoom(room, model.UserId), room.Id);
             var res = new FinishMatchResponse
             {
                 RoomId = room.Id,

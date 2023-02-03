@@ -1,4 +1,5 @@
 ﻿using ChessMobileBE.Contracts;
+using ChessMobileBE.Helpers;
 using ChessMobileBE.Models.DTOs.SignalRModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +12,11 @@ namespace ChessMobileBE.Hubs
     public class GameHub: Hub
     {
         IMatchService _matchService;
-        public GameHub(IMatchService matchService)
+        IUserService _userService;
+        public GameHub(IMatchService matchService, IUserService userService)
         {
             _matchService = matchService;
+            _userService = userService;
         }
         public override Task OnConnectedAsync()
         {
@@ -24,7 +27,15 @@ namespace ChessMobileBE.Hubs
         {
             await base.OnDisconnectedAsync(exception);
             string userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //_matchService.LoseAllRooms(userId);
+            var rooms = _matchService.GetRoomsByUserId(userId);
+            // add to db for both users
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                var oppId = Helpers.Helpers.OppIdOfRoom(rooms[i], userId);
+                _userService.AddMatchWinState(WinState.Lose, userId, rooms[i].Id);
+                _userService.AddMatchWinState(WinState.Win, oppId, rooms[i].Id);
+                _matchService.Delete(rooms[i].Id);
+            }
             await Clients.All.SendAsync("OnDisconnected", userId);
         }
         public Task SendJoinedRoomToUser(JoinRoomModel joinRoomModel)
@@ -38,7 +49,10 @@ namespace ChessMobileBE.Hubs
         public Task SendGiveUpToUser(string receiverId, string roomId)
         {
             string userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var room = _matchService.GiveUp(userId, roomId);
+            var room = _matchService.Get(roomId);
+            _matchService.Delete(roomId);
+            _userService.AddMatchWinState(WinState.Lose, userId, roomId);
+            _userService.AddMatchWinState(WinState.Win, receiverId, roomId);
             return Clients.User(receiverId).SendAsync("GaveUp", userId);
         }
     }

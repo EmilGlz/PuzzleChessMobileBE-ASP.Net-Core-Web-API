@@ -31,7 +31,7 @@ namespace ChessMobileBE.Services
             {
                 return sortedUsers;
             }
-            var res = sortedUsers.GetRange(sortedUsers.Count - count, sortedUsers.Count);
+            var res = sortedUsers.Skip(sortedUsers.Count - count).Take(count).ToList();
             return res;
         }
 
@@ -95,9 +95,14 @@ namespace ChessMobileBE.Services
             };
         }
 
-        public User AddMatchWinState(WinState winState, string userId)
+        public User AddMatchWinState(WinState winState, string userId, string roomId)
         {
             var user = GetById(userId);
+            if (user.LastMatchId == roomId) // if the match is already added
+            {
+                Console.WriteLine($"User({userId}), last match is already added: Match({roomId}) at {DateTime.UtcNow.AddHours(4).ToString("yyyy-MM-dd HH:mm:ss")}");
+                return user;
+            }
             user.MatchCount++;
             var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
             var matchCountUpdate = Builders<User>.Update.Set(r => r.MatchCount, user.MatchCount);
@@ -120,8 +125,24 @@ namespace ChessMobileBE.Services
                 _collection.FindOneAndUpdate(filter, update);
             }
             _collection.FindOneAndUpdate(filter, matchCountUpdate);
+            var lastMatchUpdate = Builders<User>.Update.Set(u => u.LastMatchId, roomId);
+            _collection.FindOneAndUpdate(filter, lastMatchUpdate);
             return user;
         }
+
+        //public void FinishMatchIfSomeoneExits(Match room)
+        //{
+        //    if (room.HostExited)
+        //    {
+        //        AddMatchWinState(WinState.Win, room.ClientId, room.Id);
+        //        AddMatchWinState(WinState.Lose, room.HostId, room.Id);
+        //    }
+        //    if (room.ClientExited)
+        //    {
+        //        AddMatchWinState(WinState.Win, room.HostId, room.Id);
+        //        AddMatchWinState(WinState.Lose, room.ClientId, room.Id);
+        //    }
+        //}
 
         public User AddMatchCount(string userId)
         {
